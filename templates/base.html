@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{% block title %}Time Traveler{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- Minimal retro vibe via system fonts -->
+</head>
+<body>
+  <header class="container">
+    <h1 class="logo">⌛ Time Traveler</h1>
+    <nav><a href="{{ url_for('index') }}">Home</a></nav>
+  </header>
+  <main class="container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash">
+          {% for m in messages %}<div>{{ m }}</div>{% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="container footer">
+    <small>Data from Wikipedia • Built with Flask</small>
+  </footer>
+</body>
+</html>
