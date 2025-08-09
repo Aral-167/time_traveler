@@ -414,6 +414,7 @@ h3 .chip { margin-left: 8px; vertical-align: middle; }
   align-items: center;
   margin: 8px 0 12px;
   flex-wrap: wrap;
+  padding-top: 6px;
 }
 
 .search-input {
@@ -488,3 +489,17 @@ mark { background: rgba(255, 209, 102, 0.35); color: inherit; padding: 0 2px; bo
 
 /* Keep compact button shadows off so they don’t bleed outside */
 .card .btn-small, .card .btn-small:hover { box-shadow: none !important; }
+
+/* Scroll progress bar */
+.progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: transparent; z-index: 50; }
+.progress__bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-hover)); transition: width .1s ease; }
+
+/* Loading overlay */
+.loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.25); display: grid; place-items: center; z-index: 60; backdrop-filter: blur(2px); }
+.loading-overlay[hidden] { display: none !important; }
+.loading__spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,.3); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Tighter subnav + tools spacing */
+.subnav { margin-top: 24px; }
+.section-tools { padding-top: 6px; }

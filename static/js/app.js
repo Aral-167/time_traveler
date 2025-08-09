@@ -218,3 +218,61 @@ function showToast(msg){
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 })();
+
+// Scroll progress bar
+(function(){
+  const bar = document.getElementById('js-progress');
+  if(!bar) return;
+  const onScroll = ()=>{
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, scrolled)) * 100 + '%';
+  };
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+// Robust loading overlay handling
+(function(){
+  const overlay = document.getElementById('js-loading');
+  if(!overlay) return;
+  let timer;
+  function setHidden(v){
+    overlay.hidden = v;
+    if (v) {
+      overlay.style.display = 'none';
+      overlay.setAttribute('aria-hidden','true');
+    } else {
+      overlay.style.display = 'grid';
+      overlay.removeAttribute('aria-hidden');
+    }
+  }
+  const show = () => {
+    setHidden(false);
+    clearTimeout(timer);
+    // Fallback auto-hide in case navigation fails
+    timer = setTimeout(() => { setHidden(true); }, 12000);
+  };
+  const hide = () => { clearTimeout(timer); setHidden(true); };
+
+  // Ensure hidden on (re)load
+  hide();
+  window.addEventListener('DOMContentLoaded', hide);
+  window.addEventListener('load', hide);
+  window.addEventListener('pageshow', hide);
+  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'visible') hide(); });
+  document.addEventListener('readystatechange', ()=>{ if(document.readyState === 'complete') hide(); });
+
+  // Show for internal year navigations (left-click, no modifiers)
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href^="/year/"]');
+    if(!a) return;
+    if(e.defaultPrevented) return;
+    if(e.button !== 0) return;
+    if(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    show();
+  }, { capture: true });
+
+  // Show on any form submit
+  document.addEventListener('submit', () => { show(); }, { capture: true });
+})();
