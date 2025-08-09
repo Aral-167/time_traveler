@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="card hero" style="margin-bottom: 30px;">
-  <div class="hero-text" style="padding: 10px;">
-    <h2 style="margin-bottom: 15px;">Welcome to Time Traveler!</h2>
-    <p style="margin-bottom: 20px;">Enter any year to explore its history, notable events, births, and deaths sourced from Wikipedia.</p>
+<section class="card hero">
+  <div class="hero-text">
+    <h2>🌟 Welcome to Time Traveler!</h2>
+    <p>Embark on a journey through history! Enter any year to explore its most significant events, notable births, and remarkable deaths, all sourced from Wikipedia.</p>
     
-    <form method="POST" class="year-form" style="margin: 20px 0;">
-      <div class="form-group" style="padding: 15px 0;">
-        <label for="year" style="display: block; margin-bottom: 8px;">Enter a year:</label>
-        <div style="display: flex; gap: 10px; align-items: center;">
+    <form method="POST" class="year-form">
+      <div class="form-group">
+        <label for="year" style="font-weight: 600; color: var(--accent); margin-bottom: 8px;">Enter a year to explore:</label>
+        <div class="form-row">
           <input type="number" id="year" name="year" min="1" max="2025" placeholder="e.g., 1969" required style="flex: 1;">
-          <button type="submit" class="btn">Explore</button>
+          <button type="submit" class="btn">🚀 Explore</button>
         </div>
       </div>
     </form>
     
-    <div class="presets" style="margin: 25px 0; padding: 15px 0;">
-      <p style="margin-bottom: 15px;">Or try one of these interesting years:</p>
+    <div class="presets">
+      <p style="margin-bottom: 15px; font-weight: 500;">✨ Or try one of these fascinating years:</p>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
         {% for preset in presets %}
           <a href="{{ url_for('results', year=preset) }}" class="btn btn-secondary">{{ preset }}</a>
@@ -26,13 +26,27 @@
   </div>
 </section>
 
-<section class="card" style="padding: 25px;">
-  <h3 style="margin-bottom: 15px;">About Time Traveler</h3>
-  <p style="margin-bottom: 15px;">This app lets you explore any year in history by fetching data from Wikipedia. Simply enter a year and discover:</p>
-  <ul style="padding-left: 25px;">
-    <li style="margin-bottom: 8px;"><strong>Historical Events</strong> - Major occurrences and milestones</li>
-    <li style="margin-bottom: 8px;"><strong>Notable Births</strong> - Famous people born that year</li>
-    <li style="margin-bottom: 8px;"><strong>Notable Deaths</strong> - Important figures who passed away</li>
-  </ul>
-</section>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 30px;">
+  <section class="card">
+    <h3>🔍 About Time Traveler</h3>
+    <p>This app lets you explore any year in history by fetching data from Wikipedia. Simply enter a year and discover:</p>
+    <ul>
+      <li><strong>📅 Historical Events</strong> - Major occurrences and milestones that shaped the world</li>
+      <li><strong>👶 Notable Births</strong> - Famous people who entered the world that year</li>
+      <li><strong>⚰️ Notable Deaths</strong> - Important figures who left their mark on history</li>
+    </ul>
+  </section>
+  
+  <section class="card">
+    <h3>💡 How It Works</h3>
+    <p>Our app connects to Wikipedia's extensive database to bring you:</p>
+    <ul>
+      <li><strong>Real-time data</strong> from Wikipedia's API</li>
+      <li><strong>Comprehensive coverage</strong> from ancient times to present</li>
+      <li><strong>Clean, organized information</strong> in an easy-to-read format</li>
+      <li><strong>Rich context</strong> with descriptions and images when available</li>
+    </ul>
+    <p style="margin-top: 16px; font-style: italic; color: var(--muted);">Start your historical journey above! ⬆️</p>
+  </section>
+</div>
 {% endblock %}

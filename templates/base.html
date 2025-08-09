@@ -5,25 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>{% block title %}Time Traveler{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <!-- Minimal retro vibe via system fonts -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⌛</text></svg>">
+  <meta name="description" content="Explore any year in history with Time Traveler - discover events, births, and deaths from Wikipedia">
 </head>
 <body>
   <header class="container">
     <h1 class="logo">⌛ Time Traveler</h1>
-    <nav><a href="{{ url_for('index') }}">Home</a></nav>
+    <nav>
+      <a href="{{ url_for('index') }}" style="padding: 8px 16px; border-radius: 8px; background: rgba(255, 209, 102, 0.1); border: 1px solid var(--border); transition: all 0.2s ease;">
+        🏠 Home
+      </a>
+      <button type="button" class="btn btn-secondary js-theme-toggle" aria-label="Toggle theme" style="margin-left:10px;">☀️ Light</button>
+    </nav>
   </header>
-  <main class="container">
+  <main class="container" id="top">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <div class="flash">
-          {% for m in messages %}<div>{{ m }}</div>{% endfor %}
+          {% for m in messages %}
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>⚠️</span>
+              <span>{{ m }}</span>
+            </div>
+          {% endfor %}
         </div>
       {% endif %}
     {% endwith %}
     {% block content %}{% endblock %}
   </main>
   <footer class="container footer">
-    <small>Data from Wikipedia • Built with Flask</small>
+    <small>
+      🌟 Explore history one year at a time • 
+      📚 Data from <a href="https://wikipedia.org" target="_blank">Wikipedia</a> • 
+      🚀 Built with Flask
+    </small>
   </footer>
+  <button type="button" class="fab js-fab-top" aria-label="Back to top">⬆️</button>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
