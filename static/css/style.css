@@ -89,6 +89,9 @@ header {
   border-bottom: 1px solid var(--border);
   padding-bottom: 15px;
   margin-bottom: 20px;
+  position: sticky; top: 0; backdrop-filter: blur(6px);
+  background: color-mix(in oklab, var(--bg) 94%, transparent);
+  z-index: 20;
 }
 
 header nav a {
@@ -120,6 +123,7 @@ header nav a:hover {
   box-shadow: 0 8px 32px var(--shadow);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  overflow: visible;
 }
 
 .card.pre-animate {
@@ -409,6 +413,7 @@ h3 .chip { margin-left: 8px; vertical-align: middle; }
   gap: 10px;
   align-items: center;
   margin: 8px 0 12px;
+  flex-wrap: wrap;
 }
 
 .search-input {
@@ -448,3 +453,38 @@ h3 .chip { margin-left: 8px; vertical-align: middle; }
 }
 
 .fab.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+/* --- Sticky header polish --- */
+header {
+  position: sticky; top: 0; backdrop-filter: blur(6px);
+  background: color-mix(in oklab, var(--bg) 94%, transparent);
+  z-index: 20;
+}
+
+/* --- Subnav active state --- */
+.subnav .btn.active { border-color: var(--accent); color: var(--accent); background: var(--btn-secondary-bg-hover) !important; }
+
+/* --- Search highlight --- */
+mark { background: rgba(255, 209, 102, 0.35); color: inherit; padding: 0 2px; border-radius: 3px; }
+
+/* --- Compact mode --- */
+.compact .card { padding: 16px; }
+.compact .item { padding: 6px 0; }
+.compact .hero-img { display: none; }
+.compact h2 { font-size: 1.6rem; }
+.compact .btn { padding: 10px 14px; }
+
+/* --- Toast --- */
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(10px);
+  background: var(--card); color: var(--text); border: 1px solid var(--border);
+  padding: 10px 14px; border-radius: 10px; box-shadow: 0 8px 20px var(--shadow);
+  opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Override to avoid clipping inputs/buttons below sticky headers */
+.card { overflow: visible; }
+
+/* Keep compact button shadows off so they don’t bleed outside */
+.card .btn-small, .card .btn-small:hover { box-shadow: none !important; }

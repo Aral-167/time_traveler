@@ -16,6 +16,7 @@
         🏠 Home
       </a>
       <button type="button" class="btn btn-secondary js-theme-toggle" aria-label="Toggle theme" style="margin-left:10px;">☀️ Light</button>
+      <button type="button" class="btn btn-secondary js-compact-toggle" aria-label="Toggle compact view" style="margin-left:10px;">🗜️ Compact</button>
     </nav>
   </header>
   <main class="container" id="top">
@@ -40,6 +41,7 @@
       🚀 Built with Flask
     </small>
   </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <button type="button" class="fab js-fab-top" aria-label="Back to top">⬆️</button>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>

@@ -10,8 +10,10 @@
       <p class="lead muted">No summary available for this year.</p>
     {% endif %}
     <div class="hero-actions">
+      <a href="{{ url_for('results', year=year-1) }}" class="btn btn-secondary">← {{ year-1 }}</a>
       <a href="{{ url_for('index') }}" class="btn">🏠 Pick Another Year</a>
       <a class="btn btn-secondary" href="https://en.wikipedia.org/wiki/{{ year }}" target="_blank" rel="noopener">📖 Wikipedia</a>
+      <a href="{{ url_for('results', year=year+1) }}" class="btn btn-secondary">{{ year+1 }} →</a>
       <button type="button" class="btn btn-secondary js-copy-link">🔗 Copy link</button>
     </div>
   </div>
@@ -26,12 +28,18 @@
   <a href="#deaths" class="btn btn-secondary">⚰️ Deaths</a>
 </nav>
 
+<nav class="card toolrow" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:center; margin-top:12px;">
+  <button type="button" class="btn btn-secondary btn-small js-expand-all">Expand all</button>
+  <button type="button" class="btn btn-secondary btn-small js-collapse-all">Collapse all</button>
+</nav>
+
 <div class="grid-3">
-  <section class="card" id="events">
+  <section class="card collapsible" id="events">
     <h3>🏛️ Major Events <span class="chip js-count">{{ sections['Events'] | length }}</span></h3>
     <div class="section-tools">
       <input type="search" class="search-input js-filter" placeholder="Filter events..." aria-label="Filter events">
       <button type="button" class="btn btn-secondary btn-small js-toggle">Show more</button>
+      <button type="button" class="btn btn-secondary btn-small js-collapse">Collapse</button>
     </div>
     {% if sections['Events'] %}
       <ul class="items items--truncated">
@@ -46,11 +54,12 @@
     {% endif %}
   </section>
 
-  <section class="card" id="births">
+  <section class="card collapsible" id="births">
     <h3>👶 Notable Births <span class="chip js-count">{{ sections['Births'] | length }}</span></h3>
     <div class="section-tools">
       <input type="search" class="search-input js-filter" placeholder="Filter births..." aria-label="Filter births">
       <button type="button" class="btn btn-secondary btn-small js-toggle">Show more</button>
+      <button type="button" class="btn btn-secondary btn-small js-collapse">Collapse</button>
     </div>
     {% if sections['Births'] %}
       <ul class="items items--truncated">
@@ -65,11 +74,12 @@
     {% endif %}
   </section>
 
-  <section class="card" id="deaths">
+  <section class="card collapsible" id="deaths">
     <h3>⚰️ Notable Deaths <span class="chip js-count">{{ sections['Deaths'] | length }}</span></h3>
     <div class="section-tools">
       <input type="search" class="search-input js-filter" placeholder="Filter deaths..." aria-label="Filter deaths">
       <button type="button" class="btn btn-secondary btn-small js-toggle">Show more</button>
+      <button type="button" class="btn btn-secondary btn-small js-collapse">Collapse</button>
     </div>
     {% if sections['Deaths'] %}
       <ul class="items items--truncated">
