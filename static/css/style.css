@@ -402,7 +402,7 @@ h3 .chip { margin-left: 8px; vertical-align: middle; }
 .item { padding: 10px 0; border-bottom: 1px solid var(--border); }
 .item:last-child { border-bottom: none; }
 
-.subnav { position: sticky; top: 8px; z-index: 5; }
+.subnav { position: sticky; top: 8px; z-index: 5; margin-top: 20px; }
 
 .section-tools {
   display: flex;
