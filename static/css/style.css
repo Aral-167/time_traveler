@@ -194,11 +194,19 @@ input[type="number"] {
   backdrop-filter: blur(10px);
 }
 
-input[type="number"]:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.2);
+/* Hide native number input arrows globally */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Remove outer number styles when inside .year-input wrapper */
+.year-input input[type="number"] { border: 0; border-radius: 0; backdrop-filter: none; }
 
 button, .btn { 
   padding: 14px 20px; 
@@ -353,22 +361,25 @@ li {
 .form-row {
   display: flex;
   gap: 12px;
-  align-items: end;
+  align-items: stretch;
 }
 
+/* Year custom stepper */
+.year-input { display: grid; grid-template-columns: 44px 1fr 44px; align-items: stretch; border: 1px solid var(--border); border-radius: 12px; background: var(--input-bg); overflow: hidden; height: 48px; }
+.year-input input { border: 0; background: transparent; padding: 0 12px; height: 100%; color: var(--text); font-size: 16px; appearance: textfield; -moz-appearance: textfield; outline: none; }
+.year-input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.2); }
+.year-input .step { padding: 0; width: 44px; height: 100%; display: grid; place-items: center; border: 0; background: transparent; color: var(--text); font-weight: 700; font-size: 18px; cursor: pointer; text-transform: none; }
+.year-input .step--down { border-right: 1px solid var(--border); }
+.year-input .step--up { border-left: 1px solid var(--border); }
+.year-input .step:hover { background: var(--btn-secondary-bg-hover); color: var(--accent); }
+.year-input .step:active { transform: none; box-shadow: none; }
+
+/* Make submit button match height */
+.form-row .btn { height: 48px; display: inline-flex; align-items: center; justify-content: center; }
+
 @media (max-width: 600px) {
-  .form-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .hero-actions {
-    flex-direction: column;
-  }
-  
-  .btn {
-    text-align: center;
-  }
+  .form-row { flex-direction: column; align-items: stretch; }
+  .form-row .btn { height: auto; }
 }
 
 /* Utility text styles */

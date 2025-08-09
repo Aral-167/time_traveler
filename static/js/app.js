@@ -276,3 +276,24 @@ function showToast(msg){
   // Show on any form submit
   document.addEventListener('submit', () => { show(); }, { capture: true });
 })();
+
+// Home page year steppers
+(function(){
+  const wrap = document.querySelector('.year-input');
+  if(!wrap) return;
+  const input = wrap.querySelector('input[type="number"]');
+  const down = wrap.querySelector('.step--down');
+  const up = wrap.querySelector('.step--up');
+  const clamp = (n)=>{
+    const min = parseInt(input.min||'1',10);
+    const max = parseInt(input.max||String(new Date().getFullYear()),10);
+    return Math.min(max, Math.max(min, n));
+  };
+  const stepBy = (delta)=>{
+    const cur = parseInt(input.value || String(new Date().getFullYear()), 10);
+    input.value = String(clamp(cur + delta));
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+  down?.addEventListener('click', ()=> stepBy(-1));
+  up?.addEventListener('click', ()=> stepBy(1));
+})();
