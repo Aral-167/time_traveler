@@ -1,56 +1,108 @@
 {% extends "base.html" %}
 {% block title %}Time Traveler • {{ year }}{% endblock %}
 {% block content %}
-<section class="card hero" style="margin-bottom: 30px;">
-  <div class="hero-text" style="padding: 10px;">
-    <h2 style="margin-bottom: 15px;">{{ year }}</h2>
+<section class="card hero">
+  <div class="hero-text">
+    <h2>📅 {{ year }}</h2>
+    <div class="year-control" style="margin:8px 0 4px;">
+      <div class="year-input year-input--hero" data-context="hero">
+        <button type="button" class="step step--down" aria-label="Previous year">−</button>
+        <input type="number" id="hero-year" value="{{ year }}" min="1" step="1" aria-label="Year">
+        <button type="button" class="step step--up" aria-label="Next year">+</button>
+      </div>
+    </div>
     {% if summary and summary.description %}
-      <p style="margin-bottom: 20px;">{{ summary.description }}</p>
+      <p class="lead">{{ summary.description }}</p>
     {% else %}
-      <p style="margin-bottom: 20px;">No summary available for this year.</p>
+      <p class="lead muted">No summary available for this year.</p>
     {% endif %}
-    <div class="hero-actions" style="display: flex; gap: 12px; margin-top: 20px;">
-      <a href="{{ url_for('index') }}" class="btn">Pick another year</a>
-      <a class="btn" href="https://en.wikipedia.org/wiki/{{ year }}" target="_blank" rel="noopener">Open on Wikipedia</a>
+    <div class="hero-actions">
+      <a href="{{ url_for('results', year=year-1) }}" class="btn btn-secondary">← {{ year-1 }}</a>
+      <a href="{{ url_for('index') }}" class="btn">🏠 Pick Another Year</a>
+      <a class="btn btn-secondary" href="https://en.wikipedia.org/wiki/{{ year }}" target="_blank" rel="noopener">📖 Wikipedia</a>
+      <a href="{{ url_for('results', year=year+1) }}" class="btn btn-secondary">{{ year+1 }} →</a>
+      <button type="button" class="btn btn-secondary js-copy-link">🔗 Copy link</button>
     </div>
   </div>
   {% if summary and summary.thumbnail %}
-    <img class="hero-img" src="{{ summary.thumbnail }}" alt="Year image" style="margin-left: 15px;">
+    <img class="hero-img" src="{{ summary.thumbnail }}" alt="Historical image from {{ year }}">
   {% endif %}
 </section>
 
-<div class="grid-3" style="gap: 20px; margin-top: 25px;">
-  <section class="card" style="padding: 25px;">
-    <h3 style="margin-bottom: 15px;">Events</h3>
-    <ul style="padding-left: 25px;">
-      {% for item in sections['Events'] %}
-        <li style="margin-bottom: 8px;">{{ item }}</li>
-      {% else %}
-        <li>No events found.</li>
-      {% endfor %}
-    </ul>
+<nav class="card subnav" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:center;">
+  <a href="#events" class="btn btn-secondary">🏛️ Events <span class="chip">{{ sections['Events'] | length }}</span></a>
+  <a href="#births" class="btn btn-secondary">👶 Births <span class="chip">{{ sections['Births'] | length }}</span></a>
+  <a href="#deaths" class="btn btn-secondary">⚰️ Deaths <span class="chip">{{ sections['Deaths'] | length }}</span></a>
+</nav>
+
+<nav class="card toolrow" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:center; margin-top:12px;">
+  <button type="button" class="btn btn-secondary btn-small js-expand-all">Expand all</button>
+  <button type="button" class="btn btn-secondary btn-small js-collapse-all">Collapse all</button>
+</nav>
+
+<div class="grid-3">
+  <section class="card collapsible" id="events">
+    <h3>🏛️ Major Events <span class="chip js-count">{{ sections['Events'] | length }}</span></h3>
+    <div class="section-tools">
+      <input type="search" class="search-input js-filter" placeholder="Filter events..." aria-label="Filter events">
+      <button type="button" class="btn btn-secondary btn-small js-toggle">Show more</button>
+      <button type="button" class="btn btn-secondary btn-small js-collapse">Collapse</button>
+    </div>
+    {% if sections['Events'] %}
+      <ul class="items items--truncated">
+        {% for item in sections['Events'] %}
+          <li class="item">{{ item }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="empty">
+        <p>📋 No major events found for this year.</p>
+      </div>
+    {% endif %}
   </section>
 
-  <section class="card" style="padding: 25px;">
-    <h3 style="margin-bottom: 15px;">Notable Births</h3>
-    <ul style="padding-left: 25px;">
-      {% for item in sections['Births'] %}
-        <li style="margin-bottom: 8px;">{{ item }}</li>
-      {% else %}
-        <li>No births data found.</li>
-      {% endfor %}
-    </ul>
+  <section class="card collapsible" id="births">
+    <h3>👶 Notable Births <span class="chip js-count">{{ sections['Births'] | length }}</span></h3>
+    <div class="section-tools">
+      <input type="search" class="search-input js-filter" placeholder="Filter births..." aria-label="Filter births">
+      <button type="button" class="btn btn-secondary btn-small js-toggle">Show more</button>
+      <button type="button" class="btn btn-secondary btn-small js-collapse">Collapse</button>
+    </div>
+    {% if sections['Births'] %}
+      <ul class="items items--truncated">
+        {% for item in sections['Births'] %}
+          <li class="item">{{ item }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="empty">
+        <p>🤱 No notable births found for this year.</p>
+      </div>
+    {% endif %}
   </section>
 
-  <section class="card" style="padding: 25px;">
-    <h3 style="margin-bottom: 15px;">Notable Deaths</h3>
-    <ul style="padding-left: 25px;">
-      {% for item in sections['Deaths'] %}
-        <li style="margin-bottom: 8px;">{{ item }}</li>
-      {% else %}
-        <li>No deaths data found.</li>
-      {% endfor %}
-    </ul>
+  <section class="card collapsible" id="deaths">
+    <h3>⚰️ Notable Deaths <span class="chip js-count">{{ sections['Deaths'] | length }}</span></h3>
+    <div class="section-tools">
+      <input type="search" class="search-input js-filter" placeholder="Filter deaths..." aria-label="Filter deaths">
+      <button type="button" class="btn btn-secondary btn-small js-toggle">Show more</button>
+      <button type="button" class="btn btn-secondary btn-small js-collapse">Collapse</button>
+    </div>
+    {% if sections['Deaths'] %}
+      <ul class="items items--truncated">
+        {% for item in sections['Deaths'] %}
+          <li class="item">{{ item }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="empty">
+        <p>💐 No notable deaths found for this year.</p>
+      </div>
+    {% endif %}
   </section>
+</div>
+
+<div class="center">
+  <a href="#top" class="btn btn-secondary">⬆️ Back to top</a>
 </div>
 {% endblock %}

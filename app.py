@@ -1,12 +1,25 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import requests, re
 from bs4 import BeautifulSoup
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from functools import lru_cache
+from random import randint
 
 app = Flask(__name__)
 app.secret_key = "dev-key"  # replace in prod
+
+# Optional: cache outbound HTTP calls to Wikipedia for 24h (if requests-cache is available)
+try:
+    import requests_cache  # type: ignore
+    requests_cache.install_cache("wiki_cache", expire_after=60*60*24)
+except Exception:
+    requests_cache = None
+
+# Friendly User-Agent per Wikimedia policy
+HTTP_HEADERS = {
+    "User-Agent": "TimeTraveler/1.0 (+https://github.com/Aral-167/time_traveler)"
+}
 
 WIKI_API = "https://en.wikipedia.org/w/api.php"
 WIKI_REST_SUMMARY = "https://en.wikipedia.org/api/rest_v1/page/summary/{}"
@@ -23,28 +36,34 @@ def get_year_page_title(year: int) -> str:
     return str(year)
 
 def _wiki_parse_sections(title: str):
-    r = requests.get(WIKI_API, params={
-        "action": "parse",
-        "page": title,
-        "prop": "sections",
-        "format": "json"
-    }, timeout=15)
-    r.raise_for_status()
-    data = r.json()
-    return data.get("parse", {}).get("sections", [])
+    try:
+        r = requests.get(WIKI_API, params={
+            "action": "parse",
+            "page": title,
+            "prop": "sections",
+            "format": "json"
+        }, headers=HTTP_HEADERS, timeout=15)
+        r.raise_for_status()
+        data = r.json()
+        return data.get("parse", {}).get("sections", [])
+    except Exception:
+        return []
 
 def _wiki_parse_section_html(title: str, index: int) -> str:
-    r = requests.get(WIKI_API, params={
-        "action": "parse",
-        "page": title,
-        "prop": "text",
-        "section": index,
-        "format": "json"
-    }, timeout=15)
-    r.raise_for_status()
-    data = r.json()
-    html = data.get("parse", {}).get("text", {}).get("*", "")
-    return html
+    try:
+        r = requests.get(WIKI_API, params={
+            "action": "parse",
+            "page": title,
+            "prop": "text",
+            "section": index,
+            "format": "json"
+        }, headers=HTTP_HEADERS, timeout=15)
+        r.raise_for_status()
+        data = r.json()
+        html = data.get("parse", {}).get("text", {}).get("*", "")
+        return html
+    except Exception:
+        return ""
 
 def _extract_list_items(html: str, limit=15):
     soup = BeautifulSoup(html, "html.parser")
@@ -85,15 +104,18 @@ def get_year_section_items(year: int, section_names=("Events", "Births", "Deaths
 def get_year_summary(year: int):
     # Quick blurb for hero section
     title = get_year_page_title(year)
-    r = requests.get(WIKI_REST_SUMMARY.format(title), timeout=15)
-    if r.status_code != 200:
+    try:
+        r = requests.get(WIKI_REST_SUMMARY.format(title), headers=HTTP_HEADERS, timeout=15)
+        if r.status_code != 200:
+            return None
+        j = r.json()
+        return {
+            "title": j.get("title"),
+            "description": j.get("extract"),
+            "thumbnail": (j.get("thumbnail") or {}).get("source")
+        }
+    except Exception:
         return None
-    j = r.json()
-    return {
-        "title": j.get("title"),
-        "description": j.get("extract"),
-        "thumbnail": (j.get("thumbnail") or {}).get("source")
-    }
 
 def clamp_year(y: int):
     # Wikipedia years generally 1..present; keep it sensible
@@ -123,6 +145,42 @@ def results(year):
     for k in ("Events", "Births", "Deaths"):
         sections.setdefault(k, [])
     return render_template("results.html", year=year, summary=summary, sections=sections)
+
+@app.route("/api/year/<int:year>")
+def api_year(year):
+    year = clamp_year(year)
+    data = cached_year_data(year)
+    return jsonify({
+        "year": year,
+        "summary": data.get("summary"),
+        "sections": data.get("sections", {})
+    })
+
+@app.route("/compare/<int:y1>/<int:y2>")
+def compare(y1, y2):
+    y1 = clamp_year(y1)
+    y2 = clamp_year(y2)
+    d1 = cached_year_data(y1)
+    d2 = cached_year_data(y2)
+    s1 = (d1.get("sections") or {}).copy()
+    s2 = (d2.get("sections") or {}).copy()
+    for k in ("Events", "Births", "Deaths"):
+        s1.setdefault(k, [])
+        s2.setdefault(k, [])
+    return render_template(
+        "compare.html",
+        y1=y1,
+        y2=y2,
+        sum1=d1.get("summary"),
+        sum2=d2.get("summary"),
+        s1=s1,
+        s2=s2,
+    )
+
+@app.route("/random")
+def random_year():
+    y = randint(1, datetime.utcnow().year)
+    return redirect(url_for('results', year=y))
 
 if __name__ == "__main__":
     app.run(debug=True)
