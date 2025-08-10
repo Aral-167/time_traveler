@@ -143,6 +143,23 @@ header nav a:hover {
   border-color: rgba(255, 209, 102, 0.3);
 }
 
+/* Ensure hero area does not clip controls */
+.hero { 
+  overflow: visible; 
+  position: relative; 
+}
+.year-input--hero { 
+  max-width: 340px; 
+  overflow: visible; 
+  z-index: 1; 
+  position: relative; 
+}
+.hero .hero-text { 
+  overflow: visible; 
+}
+/* Prevent cutoff inside sticky containers */
+.card h3 { overflow: visible; }
+
 /* Sticky section headers within cards */
 .card h3 {
   position: sticky;
@@ -182,6 +199,14 @@ header nav a:hover {
     margin: 0 auto 20px !important;
   }
 }
+
+/* Quickbar */
+.quickbar { position: fixed; right: 20px; bottom: 80px; display: flex; gap: 10px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; box-shadow: 0 10px 30px var(--shadow); z-index: 40; backdrop-filter: blur(8px); }
+.year-input--quick { grid-auto-columns: 40px 1fr 40px; height: 40px; }
+.year-input--quick .step { width: 40px; font-size: 16px; }
+.quickbar__actions { display: flex; gap: 8px; }
+.quickbar__actions .btn-small { height: 40px; display: inline-flex; align-items: center; }
+@media (max-width: 900px) { .quickbar { left: 50%; right: auto; transform: translateX(-50%); bottom: 76px; } }
 
 input[type="number"] { 
   padding: 14px 16px; 
@@ -368,14 +393,22 @@ li {
 .year-input { display: grid; grid-template-columns: 44px 1fr 44px; align-items: stretch; border: 1px solid var(--border); border-radius: 12px; background: var(--input-bg); overflow: hidden; height: 48px; }
 .year-input input { border: 0; background: transparent; padding: 0 12px; height: 100%; color: var(--text); font-size: 16px; appearance: textfield; -moz-appearance: textfield; outline: none; }
 .year-input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.2); }
-.year-input .step { padding: 0; width: 44px; height: 100%; display: grid; place-items: center; border: 0; background: transparent; color: var(--text); font-weight: 700; font-size: 18px; cursor: pointer; text-transform: none; }
+.year-input .step { padding: 0; width: 44px; height: 100%; display: grid; place-items: center; border: 0; background: transparent; color: var(--text); font-weight: 700; font-size: 18px; cursor: pointer; text-transform: none; line-height: 1; }
 .year-input .step--down { border-right: 1px solid var(--border); }
 .year-input .step--up { border-left: 1px solid var(--border); }
 .year-input .step:hover { background: var(--btn-secondary-bg-hover); color: var(--accent); }
 .year-input .step:active { transform: none; box-shadow: none; }
 
-/* Make submit button match height */
-.form-row .btn { height: 48px; display: inline-flex; align-items: center; justify-content: center; }
+/* Hero year input sizing */
+.year-input--hero { max-width: 340px; margin: 6px 0; overflow: visible; z-index: 1; position: relative; }
+
+/* Quickbar */
+.quickbar { position: fixed; right: 20px; bottom: 80px; display: flex; gap: 10px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; box-shadow: 0 10px 30px var(--shadow); z-index: 40; backdrop-filter: blur(8px); }
+.year-input--quick { grid-auto-columns: 40px 1fr 40px; height: 40px; }
+.year-input--quick .step { width: 40px; font-size: 16px; }
+.quickbar__actions { display: flex; gap: 8px; }
+.quickbar__actions .btn-small { height: 40px; display: inline-flex; align-items: center; }
+@media (max-width: 900px) { .quickbar { left: 50%; right: auto; transform: translateX(-50%); bottom: 76px; } }
 
 @media (max-width: 600px) {
   .form-row { flex-direction: column; align-items: stretch; }
@@ -514,3 +547,25 @@ mark { background: rgba(255, 209, 102, 0.35); color: inherit; padding: 0 2px; bo
 /* Tighter subnav + tools spacing */
 .subnav { margin-top: 24px; }
 .section-tools { padding-top: 6px; }
+
+/* Subnav chips inside buttons */
+.subnav .btn .chip { margin-left: 8px; border-color: var(--border); background: rgba(255, 209, 102, 0.08); }
+
+/* Command Palette (simple) */
+.command-palette { position: fixed; left: 50%; top: 20%; transform: translateX(-50%); width: min(680px, 92vw); background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 20px 60px var(--shadow); padding: 10px; z-index: 70; display: none; }
+.command-palette.show { display: block; }
+.command-palette input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); }
+.command-palette .list { margin: 10px 0 0; max-height: 280px; overflow: auto; list-style: none; padding: 0; }
+.command-palette .list li { padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.command-palette .list li:hover { background: var(--btn-secondary-bg-hover); }
+
+/* Modal base */
+.modal { position: fixed; inset: 0; z-index: 80; }
+.modal[hidden] { display: none; }
+.modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.45); backdrop-filter: blur(2px); }
+.modal__dialog { position: relative; margin: 10vh auto; width: min(720px, 92vw); background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 20px 60px var(--shadow); }
+.modal__header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.modal__body { padding: 16px; }
+.favs-list { list-style: none; margin: 0; padding: 0; }
+.favs-list li { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.favs-list li:last-child { border-bottom: none; }

@@ -4,20 +4,21 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>{% block title %}Time Traveler{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=4) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=6) }}">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⌛</text></svg>">
   <meta name="description" content="Explore any year in history with Time Traveler - discover events, births, and deaths from Wikipedia">
 </head>
 <body>
   <div class="progress" aria-hidden="true"><div class="progress__bar" id="js-progress"></div></div>
   <header class="container">
-    <h1 class="logo">⌛ Time Traveler</h1>
+    <a class="logo" href="{{ url_for('index') }}" aria-label="Home">⌛ Time Traveler</a>
     <nav>
       <a href="{{ url_for('index') }}" style="padding: 8px 16px; border-radius: 8px; background: rgba(255, 209, 102, 0.1); border: 1px solid var(--border); transition: all 0.2s ease;">
         🏠 Home
       </a>
       <button type="button" class="btn btn-secondary js-theme-toggle" aria-label="Toggle theme" style="margin-left:10px;">☀️ Light</button>
       <button type="button" class="btn btn-secondary js-compact-toggle" aria-label="Toggle compact view" style="margin-left:10px;">🗜️ Compact</button>
+      <button type="button" class="btn btn-secondary js-favs-open" aria-label="Open favorites" style="margin-left:10px;">⭐ Favorites <span class="chip js-favs-count" style="margin-left:6px;">0</span></button>
     </nav>
   </header>
   <main class="container" id="top">
@@ -46,7 +47,26 @@
   <div class="loading-overlay" id="js-loading" hidden>
     <div class="loading__spinner" aria-label="Loading" role="status"></div>
   </div>
+  <!-- Favorites Modal -->
+  <div class="modal" id="favs-modal" hidden>
+    <div class="modal__backdrop js-favs-close" tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="favs-title">
+      <div class="modal__header">
+        <h3 id="favs-title">⭐ Favorite Years</h3>
+        <button type="button" class="btn btn-secondary btn-small js-favs-close">✕</button>
+      </div>
+      <div class="modal__body">
+        <ul class="favs-list" id="favs-list"></ul>
+        <div class="muted" id="favs-empty" style="display:none;">No favorites yet. Add years from the year page.</div>
+      </div>
+    </div>
+  </div>
+  <!-- Command Palette -->
+  <div class="command-palette" id="cmd">
+    <input type="text" placeholder="Type a command... (e.g., expand, collapse, events, births, deaths, theme, top)" aria-label="Command" />
+    <ul class="list" id="cmd-list"></ul>
+  </div>
   <button type="button" class="fab js-fab-top" aria-label="Back to top">⬆️</button>
-  <script src="{{ url_for('static', filename='js/app.js', v=4) }}"></script>
+  <script src="{{ url_for('static', filename='js/app.js', v=6) }}"></script>
 </body>
 </html>

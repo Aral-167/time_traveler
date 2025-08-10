@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Compare {{ y1 }} vs {{ y2 }} • Time Traveler{% endblock %}
+{% block content %}
+<section class="card hero">
+  <div class="hero-text">
+    <h2>🔍 Compare Years</h2>
+    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 16px; align-items: end;">
+      <form action="" onsubmit="event.preventDefault(); window.location.href = '/compare/' + document.getElementById('cmp-y1').value + '/' + document.getElementById('cmp-y2').value;">
+        <label for="cmp-y1" class="muted">Year A</label>
+        <div class="year-input">
+          <button type="button" class="step step--down" onclick="document.getElementById('cmp-y1').stepDown()">−</button>
+          <input type="number" id="cmp-y1" value="{{ y1 }}" min="1" step="1" required />
+          <button type="button" class="step step--up" onclick="document.getElementById('cmp-y1').stepUp()">+</button>
+        </div>
+      </form>
+      <form action="" onsubmit="event.preventDefault(); window.location.href = '/compare/' + document.getElementById('cmp-y1').value + '/' + document.getElementById('cmp-y2').value;">
+        <label for="cmp-y2" class="muted">Year B</label>
+        <div class="year-input">
+          <button type="button" class="step step--down" onclick="document.getElementById('cmp-y2').stepDown()">−</button>
+          <input type="number" id="cmp-y2" value="{{ y2 }}" min="1" step="1" required />
+          <button type="button" class="step step--up" onclick="document.getElementById('cmp-y2').stepUp()">+</button>
+        </div>
+      </form>
+    </div>
+    <div class="hero-actions">
+      <a class="btn" href="/compare/{{ y1-1 }}/{{ y2-1 }}">⬅️ Both -1</a>
+      <a class="btn btn-secondary" href="/compare/{{ y1+1 }}/{{ y2+1 }}">Both +1 ➡️</a>
+      <a class="btn btn-secondary" href="{{ url_for('index') }}">🏠 Home</a>
+    </div>
+  </div>
+</section>
+
+<div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+  <section class="card" id="left">
+    <h3>📅 {{ y1 }}</h3>
+    <div class="chips">
+      <span class="chip">Events {{ s1['Events']|length }}</span>
+      <span class="chip">Births {{ s1['Births']|length }}</span>
+      <span class="chip">Deaths {{ s1['Deaths']|length }}</span>
+    </div>
+    {% if sum1 and sum1.description %}<p class="muted" style="margin-top:10px;">{{ sum1.description }}</p>{% endif %}
+
+    <h4 style="margin-top:16px;">🏛️ Events</h4>
+    <ul class="items items--truncated">
+      {% for item in s1['Events'] %}<li class="item">{{ item }}</li>{% endfor %}
+    </ul>
+
+    <h4 style="margin-top:16px;">👶 Births</h4>
+    <ul class="items items--truncated">
+      {% for item in s1['Births'] %}<li class="item">{{ item }}</li>{% endfor %}
+    </ul>
+
+    <h4 style="margin-top:16px;">⚰️ Deaths</h4>
+    <ul class="items items--truncated">
+      {% for item in s1['Deaths'] %}<li class="item">{{ item }}</li>{% endfor %}
+    </ul>
+  </section>
+
+  <section class="card" id="right">
+    <h3>📅 {{ y2 }}</h3>
+    <div class="chips">
+      <span class="chip">Events {{ s2['Events']|length }}</span>
+      <span class="chip">Births {{ s2['Births']|length }}</span>
+      <span class="chip">Deaths {{ s2['Deaths']|length }}</span>
+    </div>
+    {% if sum2 and sum2.description %}<p class="muted" style="margin-top:10px;">{{ sum2.description }}</p>{% endif %}
+
+    <h4 style="margin-top:16px;">🏛️ Events</h4>
+    <ul class="items items--truncated">
+      {% for item in s2['Events'] %}<li class="item">{{ item }}</li>{% endfor %}
+    </ul>
+
+    <h4 style="margin-top:16px;">👶 Births</h4>
+    <ul class="items items--truncated">
+      {% for item in s2['Births'] %}<li class="item">{{ item }}</li>{% endfor %}
+    </ul>
+
+    <h4 style="margin-top:16px;">⚰️ Deaths</h4>
+    <ul class="items items--truncated">
+      {% for item in s2['Deaths'] %}<li class="item">{{ item }}</li>{% endfor %}
+    </ul>
+  </section>
+</div>
+{% endblock %}

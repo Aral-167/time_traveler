@@ -4,6 +4,13 @@
 <section class="card hero">
   <div class="hero-text">
     <h2>📅 {{ year }}</h2>
+    <div class="year-control" style="margin:8px 0 4px;">
+      <div class="year-input year-input--hero" data-context="hero">
+        <button type="button" class="step step--down" aria-label="Previous year">−</button>
+        <input type="number" id="hero-year" value="{{ year }}" min="1" step="1" aria-label="Year">
+        <button type="button" class="step step--up" aria-label="Next year">+</button>
+      </div>
+    </div>
     {% if summary and summary.description %}
       <p class="lead">{{ summary.description }}</p>
     {% else %}
@@ -23,9 +30,9 @@
 </section>
 
 <nav class="card subnav" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:center;">
-  <a href="#events" class="btn btn-secondary">🏛️ Events</a>
-  <a href="#births" class="btn btn-secondary">👶 Births</a>
-  <a href="#deaths" class="btn btn-secondary">⚰️ Deaths</a>
+  <a href="#events" class="btn btn-secondary">🏛️ Events <span class="chip">{{ sections['Events'] | length }}</span></a>
+  <a href="#births" class="btn btn-secondary">👶 Births <span class="chip">{{ sections['Births'] | length }}</span></a>
+  <a href="#deaths" class="btn btn-secondary">⚰️ Deaths <span class="chip">{{ sections['Deaths'] | length }}</span></a>
 </nav>
 
 <nav class="card toolrow" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:center; margin-top:12px;">

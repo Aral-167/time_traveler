@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from functools import lru_cache
+from random import randint
 
 app = Flask(__name__)
 app.secret_key = "dev-key"  # replace in prod
@@ -154,6 +155,32 @@ def api_year(year):
         "summary": data.get("summary"),
         "sections": data.get("sections", {})
     })
+
+@app.route("/compare/<int:y1>/<int:y2>")
+def compare(y1, y2):
+    y1 = clamp_year(y1)
+    y2 = clamp_year(y2)
+    d1 = cached_year_data(y1)
+    d2 = cached_year_data(y2)
+    s1 = (d1.get("sections") or {}).copy()
+    s2 = (d2.get("sections") or {}).copy()
+    for k in ("Events", "Births", "Deaths"):
+        s1.setdefault(k, [])
+        s2.setdefault(k, [])
+    return render_template(
+        "compare.html",
+        y1=y1,
+        y2=y2,
+        sum1=d1.get("summary"),
+        sum2=d2.get("summary"),
+        s1=s1,
+        s2=s2,
+    )
+
+@app.route("/random")
+def random_year():
+    y = randint(1, datetime.utcnow().year)
+    return redirect(url_for('results', year=y))
 
 if __name__ == "__main__":
     app.run(debug=True)
