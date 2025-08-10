@@ -2,9 +2,9 @@
 
 Explore any year in history. Time Traveler pulls structured content from Wikipedia to show notable Events, Births, and Deaths for a selected year with a clean, fast UI.
 
-[![App Image](https://hc-cdn.hel1.your-objectstorage.com/s/v3/4145627141f6395d6a844c93eead3d0dd366823f_screenshot_2025-08-10_194102.png)]
+![App Image](https://hc-cdn.hel1.your-objectstorage.com/s/v3/4145627141f6395d6a844c93eead3d0dd366823f_screenshot_2025-08-10_194102.png)
 
-##Link
+## Link
 
 
 ## Features
